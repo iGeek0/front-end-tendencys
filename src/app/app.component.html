@@ -1,0 +1,29 @@
+<div class="container">
+
+  <h1>Tendencys Front-end</h1>
+  <p class="lead">Cargando ordenes, con posivilidad de visualizar su detalle y agregar mas productos.</p>
+
+  <table class="table table-bordered">
+    <thead class="table-blue">
+      <tr>
+        <th>Orden</th>
+        <th>Discount</th>
+        <th>Shipping</th>
+        <th>Subtotal</th>
+        <th>Tax</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of orders">
+        <td class="text-center"> <button type="button" class="btn btn-primary">{{item.number}}</button> </td>
+        <td>{{item.totals.discount | currency}}</td>
+        <td>{{item.totals.shipping | currency}}</td>
+        <td>{{item.totals.subtotal | currency}}</td>
+        <td>{{item.totals.tax | currency}}</td>
+        <td>{{item.totals.total | currency}}</td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
