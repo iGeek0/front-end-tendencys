@@ -3,7 +3,9 @@
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.3.6.
 ## Liga demo del proyecto
 
-Puede visualizarse el resultado del proyecto en la siguiente liga: [Click Aqui](http://tendencys-front-end.dev4humans.com.mx)
+
+Puede visualizarse el resultado del proyecto en la siguiente liga: [Click Aqui](http://www.tendencys-front-end.dev4humans.com.mx)
+
 
 ## Instalar dependencias
 
