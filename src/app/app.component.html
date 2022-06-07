@@ -1,29 +1,134 @@
 <div class="container">
 
   <h1>Tendencys Front-end</h1>
-  <p class="lead">Cargando ordenes, con posivilidad de visualizar su detalle y agregar mas productos.</p>
+  <p class="lead">Cargando ordenes, con opcion de visualizar su detalle y agregar mas productos.</p>
 
-  <table class="table table-bordered">
-    <thead class="table-blue">
-      <tr>
-        <th>Orden</th>
-        <th>Discount</th>
-        <th>Shipping</th>
-        <th>Subtotal</th>
-        <th>Tax</th>
-        <th>Total</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let item of orders">
-        <td class="text-center"> <button type="button" class="btn btn-primary">{{item.number}}</button> </td>
-        <td>{{item.totals.discount | currency}}</td>
-        <td>{{item.totals.shipping | currency}}</td>
-        <td>{{item.totals.subtotal | currency}}</td>
-        <td>{{item.totals.tax | currency}}</td>
-        <td>{{item.totals.total | currency}}</td>
-      </tr>
-    </tbody>
-  </table>
+
+  <div class="row">
+    <div class="col">
+      <h5>Herramientas/Librerias utilizadas</h5>
+      <ul>
+        <li>Angular 13(<a href="https://angular.io/" target="_blank">https://angular.io/</a>)</li>
+        <li>Bootstrap 5(<a href="https://getbootstrap.com/" target="_blank">https://getbootstrap.com/</a>)</li>
+        <li>Pure CSS Loader(<a href="https://loading.io/css/" target="_blank">https://loading.io/css/</a>)</li>
+        <li>Pure CSS Loader(<a href="https://loading.io/css/" target="_blank">https://loading.io/css/</a>)</li>
+        <li>Toastr(<a href="https://ngx-toastr.vercel.app/" target="_blank">https://ngx-toastr.vercel.app/</a>)</li>
+      </ul>
+
+    </div>
+    <div class="col">
+
+
+      <h5>Conocimientos aplicados</h5>
+
+      <ul>
+        <li>Sobreescrito clasess css Bootstrap (primary)</li>
+        <li>Componente List Bootstrap</li>
+        <li>Componente Table Bootstrap</li>
+        <li>Modal Bootstrap</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="load">
+    <div class="col-12 text-center">
+      <div class="lds-ring">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+      <h3>Cargando...</h3>
+    </div>
+  </div>
+  <div class="row" *ngIf="!load">
+    <div class="col-3">
+      <h3>Ordenes</h3>
+      <ul class="list-group">
+        <li class="list-group-item" [ngClass]="{'active': item.active}" *ngFor="let item of orders"
+          (click)="showProducts(item)">{{item.number}}</li>
+      </ul>
+    </div>
+    <div class="col-9">
+      <div class="row" *ngIf="!showProductsView">
+        <div class="col-12 mt-4 text-center line">
+          <h4 class="text-primary lineUp">SELECCIONE UNA ORDEN DE LA IZUIQERDA PARA VER SUS PRODUCTOS.</h4>
+        </div>
+      </div>
+      <ng-container *ngIf="showProductsView">
+        <div class="row">
+          <div class="col">
+            <h3>Productos Orden# {{selectedOrder.number}}</h3>
+          </div>
+          <div class="col text-end">
+            <button type="button" class="btn btn-primary" (click)="open(content)">Agrergar producto</button>
+          </div>
+        </div>
+        <table class="table table-bordered">
+          <thead class="table-blue">
+            <tr>
+              <th>Sku</th>
+              <th>Name</th>
+              <th>Quantity</th>
+              <th>Price</th>
+              <th>Opciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of selectedOrder.items">
+              <td>{{item.sku}}</td>
+              <td>{{item.name}}</td>
+              <td>{{item.quantity}}</td>
+              <td>{{item.price |currency}}</td>
+              <td class="text-center">
+                <button type="button" class="btn btn-success btn-sm" (click)="addPayment()">Agregar pago</button>
+              </td>
+            </tr>
+            <tr class="text-center" *ngIf="selectedOrder.items?.length <= 0">
+              <td colspan="5" class="fw-bold">NO PRODUCTS</td>
+            </tr>
+          </tbody>
+        </table>
+      </ng-container>
+
+
+    </div>
+  </div>
+
 
 </div>
+
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Agregar producto</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="productForm" class="needs-validation" novalidate #ngForm="ngForm" (ngSubmit)="addProduct()">
+      <div class="mb-3">
+        <label class="form-label">SKU</label>
+        <input type="text" class="form-control" formControlName="sku"
+          [ngClass]="{'is-invalid': productForm.get('sku')?.invalid && ngForm.submitted, 'is-valid': productForm.get('sku')?.valid && ngForm.submitted}">
+
+      </div>
+      <div class="mb-3">
+        <label class="form-label">NAME</label>
+        <input type="text" class="form-control" formControlName="name"
+          [ngClass]="{'is-invalid': productForm.get('name')?.invalid && ngForm.submitted, 'is-valid': productForm.get('name')?.valid && ngForm.submitted}">
+      </div>
+      <div class="mb-3">
+        <label class="form-label">QUANTITY</label>
+        <input type="text" class="form-control" digitOnly formControlName="quantity"
+          [ngClass]="{'is-invalid': productForm.get('quantity')?.invalid && ngForm.submitted, 'is-valid': productForm.get('quantity')?.valid && ngForm.submitted}">
+      </div>
+      <div class="mb-3">
+        <label class="form-label">PRICE</label>
+        <input type="text" class="form-control" digitOnly [decimal]="true" formControlName="price"
+          [ngClass]="{'is-invalid': productForm.get('price')?.invalid && ngForm.submitted, 'is-valid': productForm.get('price')?.valid && ngForm.submitted}">
+      </div>
+      <button type="submit" class="btn btn-primary w-100">Guardar</button>
+
+    </form>
+  </div>
+</ng-template>
